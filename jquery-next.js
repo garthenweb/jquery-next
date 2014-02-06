@@ -1,213 +1,213 @@
 (function(window, undefined) {
 
-	'use strict';
+  'use strict';
 
-	var document = window.document;
+  var document = window.document;
 
-	var _toArray = function(list) {
-		return Array.prototype.slice.call(list, 0);
-	};
+  var _toArray = function(list) {
+    return Array.prototype.slice.call(list, 0);
+  };
 
-	var _toHTML = function(htmlString) {
-		var div = document.createElement('div');
-		div.innerHTML = htmlString;
-		return div.childNodes;
-	};
+  var _toHTML = function(htmlString) {
+    var div = document.createElement('div');
+    div.innerHTML = htmlString;
+    return div.childNodes;
+  };
 
-	var $ = function jQueryNext(selector, context) {
-		return new $.fn.init(selector, context);
-	};
+  var $ = function jQueryNext(selector, context) {
+    return new $.fn.init(selector, context);
+  };
 
-	$.fn = $.prototype = {
+  $.fn = $.prototype = {
 
-		constructor: $,
+    constructor: $,
 
-		init: function(selector, context) {
+    init: function(selector, context) {
 
-			var elements,
-				  index;
+      var elements,
+          index;
 
-			if(!selector) {
+      if(!selector) {
 
         this.elements = [];
         this.length = this.elements.length;
 
-				return this;
+        return this;
 
-			} else if(typeof(selector) === 'string') {
+      } else if(typeof(selector) === 'string') {
 
-				if(selector.charAt(0) === '<' && selector.charAt( selector.length - 1 ) === '>' && selector.length >= 3) {
+        if(selector.charAt(0) === '<' && selector.charAt( selector.length - 1 ) === '>' && selector.length >= 3) {
 
-					// selector is html string
-					// create elements
-					elements = _toHTML(selector);
+          // selector is html string
+          // create elements
+          elements = _toHTML(selector);
 
-				} else {
+        } else {
 
-					this.selector = selector;
+          this.selector = selector;
 
-					if(!context) {
+          if(!context) {
 
-						context = document;
-						elements = context.querySelectorAll(selector);
+            context = document;
+            elements = context.querySelectorAll(selector);
 
-					} else if(context instanceof window.Node) {
+          } else if(context instanceof window.Node) {
 
-						elements = context.querySelectorAll(selector);
+            elements = context.querySelectorAll(selector);
 
-					} else if(context instanceof window.NodeList) {
+          } else if(context instanceof window.NodeList) {
 
-						elements = [];
-						_toArray(context).forEach(function(node) {
-							if(node instanceof window.Node) {
-								elements.push(node.querySelectorAll(selector));
-							}
-						});
+            elements = [];
+            _toArray(context).forEach(function(node) {
+              if(node instanceof window.Node) {
+                elements.push(node.querySelectorAll(selector));
+              }
+            });
 
-					} else {
+          } else {
 
-						throw 'Context should be instance of Node or a NodeList';
+            throw 'Context should be instance of Node or a NodeList';
 
-					}
+          }
 
-				}
+        }
 
-			} else if(selector instanceof window.Node) {
+      } else if(selector instanceof window.Node) {
 
-				elements = [selector];
+        elements = [selector];
 
-			} else if(selector instanceof window.NodeList) {
+      } else if(selector instanceof window.NodeList) {
 
-				elements = selector;
+        elements = selector;
 
-			} else {
+      } else {
 
-				throw 'Selector should be a String, Node or NodeList';
+        throw 'Selector should be a String, Node or NodeList';
 
-			}
+      }
 
-			if(context) {
-				this.context = context;
-			}
+      if(context) {
+        this.context = context;
+      }
 
-			index = 0;
-			// get elements without text nodes and append to object
-			this.elements = _toArray(elements).filter(function(el) {
+      index = 0;
+      // get elements without text nodes and append to object
+      this.elements = _toArray(elements).filter(function(el) {
 
-				if(el.nodeType === 1) {
-					this[index++] = el;
-					return true;
-				}
+        if(el.nodeType === 1) {
+          this[index++] = el;
+          return true;
+        }
 
-				return false;
+        return false;
 
-			}, this);
+      }, this);
 
-			this.length = this.elements.length;
+      this.length = this.elements.length;
 
-			return this;
+      return this;
 
-		},
+    },
 
-		get: function(num) {
+    get: function(num) {
 
-			return typeof(num) === 'undefined' ? this.elements : this.elements[num];
+      return typeof(num) === 'undefined' ? this.elements : this.elements[num];
 
-		},
+    },
 
-		forEach: function(callback, ctx) {
+    forEach: function(callback, ctx) {
 
-			this.elements.forEach(callback, ctx);
+      this.elements.forEach(callback, ctx);
 
-			return this;
+      return this;
 
-		},
+    },
 
-		each: function(callback) {
+    each: function(callback) {
 
-			return this.forEach(function(value, index) {
-				callback.apply(value, [index, value]);
-			});
+      return this.forEach(function(value, index) {
+        callback.apply(value, [index, value]);
+      });
 
-		},
+    },
 
-		addClass: function(className) {
+    addClass: function(className) {
 
-			this.forEach(function(el) {
-				el.classList.add(className);
-			});
+      this.forEach(function(el) {
+        el.classList.add(className);
+      });
 
-			return this;
+      return this;
 
-		},
+    },
 
-		removeClass: function(className) {
+    removeClass: function(className) {
 
-			this.forEach(function(el) {
-				el.classList.remove(className);
-			});
+      this.forEach(function(el) {
+        el.classList.remove(className);
+      });
 
-			return this;
+      return this;
 
-		},
+    },
 
-		hasClass: function(className) {
+    hasClass: function(className) {
 
-			return this.elements.some(function(el) {
-				return el.classList.contains(className);
-			});
+      return this.elements.some(function(el) {
+        return el.classList.contains(className);
+      });
 
-		},
+    },
 
-		toggleClass: function(className) {
+    toggleClass: function(className) {
 
-			this.forEach(function(el) {
-				el.classList.toggle(className);
-			});
+      this.forEach(function(el) {
+        el.classList.toggle(className);
+      });
 
-			return this;
+      return this;
 
-		},
+    },
 
-		attr: function(attr, value) {
+    attr: function(attr, value) {
 
-			if(!value) {
-				return this.elements[0].getAttribute(attr);
-			}
+      if(!value) {
+        return this.elements[0].getAttribute(attr);
+      }
 
-			this.forEach(function(el) {
-				el.setAttribute(attr, value);
-			});
+      this.forEach(function(el) {
+        el.setAttribute(attr, value);
+      });
 
-			return this;
+      return this;
 
-		},
+    },
 
-		data: function(key, value) {
+    data: function(key, value) {
 
-			if (!value) { return this.elements[0].dataset[key]; }
+      if (!value) { return this.elements[0].dataset[key]; }
 
-			this.forEach(function (el) {
-				el.dataset[key] = value;
-			});
+      this.forEach(function (el) {
+        el.dataset[key] = value;
+      });
 
-			return this;
+      return this;
 
-		},
+    },
 
-		val: function(value) {
+    val: function(value) {
 
-			return this.attr('value', value);
+      return this.attr('value', value);
 
-		}
+    }
 
-	};
+  };
 
-	// insert fn as prototype for chaining
-	$.fn.init.prototype = $.fn;
+  // insert fn as prototype for chaining
+  $.fn.init.prototype = $.fn;
 
 
-	// insert into window object
-	window.$next = $;
+  // insert into window object
+  window.$next = $;
 
 })(window);
