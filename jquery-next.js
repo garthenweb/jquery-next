@@ -4,22 +4,18 @@
 
 	var document = window.document;
 
-	var toArray = function(list) {
+	var _toArray = function(list) {
 		return Array.prototype.slice.call(list, 0);
 	};
 
-	var toHTML = function(htmlString) {
-
+	var _toHTML = function(htmlString) {
 		var div = document.createElement('div');
 		div.innerHTML = htmlString;
 		return div.childNodes;
-
 	};
 
 	var $ = function jQueryNext(selector, context) {
-
 		return new $.fn.init(selector, context);
-
 	};
 
 	$.fn = $.prototype = {
@@ -33,6 +29,9 @@
 
 			if(!selector) {
 
+        this.elements = [];
+        this.length = this.elements.length;
+
 				return this;
 
 			} else if(typeof(selector) === 'string') {
@@ -41,7 +40,7 @@
 
 					// selector is html string
 					// create elements
-					elements = toHTML(selector);
+					elements = _toHTML(selector);
 
 				} else {
 
@@ -59,7 +58,7 @@
 					} else if(context instanceof window.NodeList) {
 
 						elements = [];
-						toArray(context).forEach(function(node) {
+						_toArray(context).forEach(function(node) {
 							if(node instanceof window.Node) {
 								elements.push(node.querySelectorAll(selector));
 							}
@@ -67,7 +66,7 @@
 
 					} else {
 
-						throw 'Context should be instance of Element or a NodeList';
+						throw 'Context should be instance of Node or a NodeList';
 
 					}
 
@@ -93,7 +92,7 @@
 
 			index = 0;
 			// get elements without text nodes and append to object
-			this.elements = toArray(elements).filter(function(el) {
+			this.elements = _toArray(elements).filter(function(el) {
 
 				if(el.nodeType === 1) {
 					this[index++] = el;
