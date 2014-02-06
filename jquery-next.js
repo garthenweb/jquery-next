@@ -29,8 +29,7 @@
 		init: function(selector, context) {
 
 			var elements,
-				dummy,
-				index;
+				  index;
 
 			if(!selector) {
 
@@ -38,7 +37,7 @@
 
 			} else if(typeof(selector) === 'string') {
 
-				if(selector.charAt(0) === "<" && selector.charAt( selector.length - 1 ) === ">" && selector.length >= 3) {
+				if(selector.charAt(0) === '<' && selector.charAt( selector.length - 1 ) === '>' && selector.length >= 3) {
 
 					// selector is html string
 					// create elements
@@ -74,11 +73,11 @@
 
 				}
 
-			} else if(selector instanceof Node) {
+			} else if(selector instanceof window.Node) {
 
 				elements = [selector];
 
-			} else if(selector instanceof NodeList) {
+			} else if(selector instanceof window.NodeList) {
 
 				elements = selector;
 
