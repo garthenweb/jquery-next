@@ -185,9 +185,15 @@
 
 		},
 
-		data: function(type, value) {
+		data: function(key, value) {
 
-			return this.attr('data-' + type, value);
+			if (!value) { return this.elements[0].dataset[key]; }
+
+			this.forEach(function (el) {
+				el.dataset[key] = value;
+			});
+
+			return this;
 
 		},
 
