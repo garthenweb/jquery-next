@@ -53,7 +53,7 @@
 						context = document;
 						elements = context.querySelectorAll(selector);
 
-					} else if(context instanceof window.Element) {
+					} else if(context instanceof window.Node) {
 
 						elements = context.querySelectorAll(selector);
 
@@ -61,7 +61,7 @@
 
 						elements = [];
 						toArray(context).forEach(function(node) {
-							if(node instanceof window.Element) {
+							if(node instanceof window.Node) {
 								elements.push(node.querySelectorAll(selector));
 							}
 						});
