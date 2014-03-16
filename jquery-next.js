@@ -14,6 +14,30 @@
     return div.childNodes;
   };
 
+  var _isNode = function(node) {
+    return node instanceof window.Node;
+  };
+
+  var _isNodeList = function(list) {
+    return list instanceof window.NodeList;
+  };
+
+  var _isString = function(str) {
+    return typeof str === 'string';
+  };
+
+  var _isElementNode = function(node) {
+    return node.nodeType === 1;
+  };
+
+  var _isArray = function(arr) {
+    return Object.prototype.toString.call(arr);
+  };
+
+  var _isUndefined = function(obj) {
+    return typeof obj === 'undefined';
+  };
+
   var $ = function jQueryNext(selector, context) {
     return new $.fn.init(selector, context);
   };
@@ -34,7 +58,7 @@
 
         return this;
 
-      } else if(typeof(selector) === 'string') {
+      } else if(_isString(selector)) {
 
         if(selector.charAt(0) === '<' && selector.charAt( selector.length - 1 ) === '>' && selector.length >= 3) {
 
@@ -51,32 +75,36 @@
             context = document;
             elements = context.querySelectorAll(selector);
 
-          } else if(context instanceof window.Node) {
+          } else if(_isNode(context)) {
 
             elements = context.querySelectorAll(selector);
 
-          } else if(context instanceof window.NodeList) {
+          } else if(_isNodeList(context) || _isArray(context)) {
 
             elements = [];
             _toArray(context).forEach(function(node) {
-              if(node instanceof window.Node) {
-                elements.push(node.querySelectorAll(selector));
+              if(_isNode(node)) {
+                // find all nodes by querySelectorAll
+                // and push each into the elements array
+                _toArray(node.querySelectorAll(selector)).forEach(function(el) {
+                  elements.push(el);
+                });
               }
             });
 
           } else {
 
-            throw 'Context should be instance of Node or a NodeList';
+            throw 'Context should be a node or a list of nodes';
 
           }
 
         }
 
-      } else if(selector instanceof window.Node) {
+      } else if(_isNode(selector)) {
 
         elements = [selector];
 
-      } else if(selector instanceof window.NodeList) {
+      } else if(_isNodeList(selector)) {
 
         elements = selector;
 
@@ -92,9 +120,10 @@
 
       index = 0;
       // get elements without text nodes and append to object
+      // also convert elements into an array and save as elements on this
       this.elements = _toArray(elements).filter(function(el) {
 
-        if(el.nodeType === 1) {
+        if(_isElementNode(el)) {
           this[index++] = el;
           return true;
         }
@@ -111,7 +140,7 @@
 
     get: function(num) {
 
-      return typeof(num) === 'undefined' ? this.elements : this.elements[num];
+      return _isUndefined(num) ? this.elements : this.elements[num];
 
     },
 
@@ -199,7 +228,15 @@
 
       return this.attr('value', value);
 
+    },
+
+    find: function(selector) {
+
+      return this.constructor(selector, this.elements);
+
     }
+
+
 
   };
 

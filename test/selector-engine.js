@@ -47,7 +47,7 @@
 
       });
 
-      it('should set default context do document', function() {
+      it('should set default context to document if not defined', function() {
         expect($next('div').context).toBe(document);
       });
 
@@ -56,6 +56,10 @@
         document.body.appendChild(div);
         expect($next('div').length).toBe(1);
         expect($next('div')[0]).toBe(div);
+        var parent = div.parentNode;
+        parent.removeChild(div);
+        parent = null;
+        div = null;
       });
 
     });
