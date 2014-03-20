@@ -121,9 +121,11 @@
       index = 0;
       // get elements without text nodes and append to object
       // also convert elements into an array and save as elements on this
-      this.elements = _toArray(elements).filter(function(el) {
+      this.elements = _toArray(elements).filter(function(el, key, elements) {
 
-        if(_isElementNode(el)) {
+        // filter duplicated elements
+        var firstOfType = elements.indexOf(el) === key;
+        if(_isElementNode(el) && firstOfType) {
           this[index++] = el;
           return true;
         }

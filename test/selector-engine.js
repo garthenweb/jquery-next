@@ -4,6 +4,10 @@
 
   describe('Next', function() {
 
+    afterEach(function() {
+      document.body.innerHTML = '';
+    });
+
     it('should be defined', function() {
       expect($next).toBeDefined();
     });
@@ -51,15 +55,40 @@
         expect($next('div').context).toBe(document);
       });
 
-      it('should find elements by tagName', function() {
+      it('should find elements by tag name', function() {
         var div = document.createElement('div');
         document.body.appendChild(div);
         expect($next('div').length).toBe(1);
         expect($next('div')[0]).toBe(div);
-        var parent = div.parentNode;
-        parent.removeChild(div);
-        parent = null;
-        div = null;
+      });
+
+      it('should accept comma seperated selectors', function() {
+        var html = '<div></div><span></span>';
+        document.body.innerHTML = html;
+        var $matches = $next('div, span');
+        expect($matches.length).toBe(2);
+        expect($matches[0].tagName).toBe('DIV');
+        expect($matches[1].tagName).toBe('SPAN');
+      });
+
+      it('should not have duplicated entries', function() {
+
+        var html = '<div class="test"></div>';
+        document.body.innerHTML = html;
+
+        var $matches = $next('div, .test');
+        expect($matches.length).toBe(1);
+
+      });
+
+      it('should not have duplicated entries when iterating over multiple context', function() {
+
+        var html = '<div class="test"></div>';
+        document.body.innerHTML = html;
+
+        var $matches = $next('div, .test', [document.body, document]);
+        expect($matches.length).toBe(1);
+
       });
 
     });
