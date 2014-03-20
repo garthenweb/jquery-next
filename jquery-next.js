@@ -104,13 +104,13 @@
 
         elements = [selector];
 
-      } else if(_isNodeList(selector)) {
+      } else if(_isNodeList(context) || _isArray(context)) {
 
         elements = selector;
 
       } else {
 
-        throw 'Selector should be a String, Node or NodeList';
+        throw 'Selector should be a string, node or a list of nodes';
 
       }
 
@@ -236,9 +236,16 @@
 
       return this.constructor(selector, this.elements);
 
+    },
+
+    parent: function() {
+
+      var parents = this.elements.map(function(el) {
+        return el.parentNode;
+      });
+      return new this.constructor(parents);
+
     }
-
-
 
   };
 

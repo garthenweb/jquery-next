@@ -4,12 +4,10 @@
 
   describe('Next', function() {
 
-    var div;
     beforeEach(function() {
       var first = '<div id="first"><div class="test-class"></div></div>';
       var second = '<div id="second"><div class="test-class"><div class="test-class"></div><span class="test-class-2"></span></div></div>';
-      document.body.innerHTML = first;
-      document.body.innerHTML += second;
+      document.body.innerHTML = first + second;
     });
 
     afterEach(function() {
