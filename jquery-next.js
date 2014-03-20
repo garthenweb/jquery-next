@@ -245,6 +245,16 @@
       });
       return new this.constructor(parents);
 
+    },
+
+    remove: function() {
+
+      this.forEach(function(el) {
+        var parent = el.parentNode;
+        parent.removeChild(el);
+      });
+
+      return this;
     }
 
   };
