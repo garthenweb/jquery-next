@@ -51,8 +51,12 @@
 
       });
 
-      it('should set default context to document if not defined', function() {
+      it('should set default context for strings based selectors if not defined', function() {
         expect($next('div').context).toBe(document);
+      });
+
+      it('should set default context for single nodes', function() {
+        expect($next(document.getElementsByTagName('html')[0]).context).toBe(document);
       });
 
       it('should find elements by tag name', function() {
@@ -88,6 +92,18 @@
 
         var $matches = $next('div, .test', [document.body, document]);
         expect($matches.length).toBe(1);
+
+      });
+
+      it('should accept document node as first parameter', function() {
+
+        expect($next(document)[0]).toBe(document);
+
+      });
+
+      it('should accept window node as first parameter', function() {
+
+        expect($next(window)[0]).toBe(window);
 
       });
 

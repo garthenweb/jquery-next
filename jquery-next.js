@@ -30,8 +30,19 @@
     return node.nodeType === 1;
   };
 
+  var _isDocumentNode = function(node) {
+    return node.nodeType === 9;
+  };
+
+  var _isGlobal = function(obj) {
+    var str = Object.prototype.toString.call(obj)
+    return str === '[object global]'
+        || str === '[object DOMWindow]'
+        || str === '[object Window]';
+  };
+
   var _isArray = function(arr) {
-    return Object.prototype.toString.call(arr);
+    return Object.prototype.toString.call(arr)  === '[object Array]';
   };
 
   var _isUndefined = function(obj) {
@@ -70,12 +81,12 @@
 
           this.selector = selector;
 
+          // set document as default context
           if(!context) {
-
             context = document;
-            elements = context.querySelectorAll(selector);
+          }
 
-          } else if(_isNode(context)) {
+          if(_isNode(context)) {
 
             elements = context.querySelectorAll(selector);
 
@@ -100,11 +111,16 @@
 
         }
 
-      } else if(_isNode(selector)) {
+      } else if(_isNode(selector) || _isGlobal(selector)) {
+
+        // set document as default context
+        if(!context) {
+          context = document;
+        }
 
         elements = [selector];
 
-      } else if(_isNodeList(context) || _isArray(context)) {
+      } else if(_isNodeList(selector) || _isArray(selector)) {
 
         elements = selector;
 
@@ -125,7 +141,7 @@
 
         // filter duplicated elements
         var firstOfType = elements.indexOf(el) === key;
-        if(_isElementNode(el) && firstOfType) {
+        if(firstOfType && (_isElementNode(el) || _isDocumentNode(el) || _isGlobal(el))) {
           this[index++] = el;
           return true;
         }
@@ -251,7 +267,9 @@
 
       this.forEach(function(el) {
         var parent = el.parentNode;
-        parent.removeChild(el);
+        if(parent) {
+          parent.removeChild(el);
+        }
       });
 
       return this;

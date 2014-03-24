@@ -36,6 +36,14 @@
 
       });
 
+      it('should ignore nodes without a parent', function() {
+
+        expect(function() {
+          $next(document).remove();
+        }).not.toThrow();
+
+      });
+
     });
   });
 
