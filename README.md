@@ -28,7 +28,10 @@ Lean implementation of a jQuery like DOM library with native APIs.
  * clone
  * before
  * after
+ * append
+ * prepend
  * appendTo
+ * prependTo
 
 #### attributes
  * width
@@ -64,6 +67,7 @@ Lean implementation of a jQuery like DOM library with native APIs.
 
 #### manipulation
  * remove
+ * empty
 
 #### attributes
  * attr

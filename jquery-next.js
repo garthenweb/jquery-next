@@ -306,6 +306,20 @@
       });
 
       return this;
+    },
+
+    /**
+     * removes all child nodes from elements
+     * @return {$} self
+     */
+    empty: function() {
+
+      this.forEach(function(el) {
+        el.innerHTML = '';
+      });
+
+      return this;
+
     }
 
   };
