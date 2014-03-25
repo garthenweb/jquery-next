@@ -24,6 +24,8 @@
     "describe": false,
     "it": false,
     "expect": false,
-    "$next": false
+    "$next": false,
+    "beforeEach", false,
+    "afterEach", false
   }
 }

@@ -14,6 +14,10 @@
     return div.childNodes;
   };
 
+  var _isBoolean = function(value) {
+    return value === true || value === false;
+  };
+
   var _isNode = function(node) {
     return node instanceof window.Node;
   };
@@ -218,12 +222,41 @@
 
     attr: function(attr, value) {
 
+      if(value === false) {
+        // remove attribute if value is false
+        return this.removeAttr(attr);
+      } else if(value === true) {
+        // set value to attribute name if value is true
+        value = attr;
+      }
+
       if(!value) {
+        // return attribute value of first element
         return this.elements[0].getAttribute(attr);
       }
 
       this.forEach(function(el) {
         el.setAttribute(attr, value);
+      });
+
+      return this;
+
+    },
+
+    /**
+     * removes attributes from element
+     * @param  {String} attrs space seperated list of attribute names
+     * @return {$}            return self
+     */
+    removeAttr: function(attrs) {
+
+      // allow to insert space seperated attribute names
+      attrs = attrs.split(' ');
+
+      this.forEach(function(el) {
+        attrs.forEach(function(attr) {
+          el.removeAttribute(attr);
+        });
       });
 
       return this;

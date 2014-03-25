@@ -35,7 +35,6 @@ Lean implementation of a jQuery like DOM library with native APIs.
  * outerWidth
  * height
  * outerHeight
- * removeAttr
  * css
  * show
  * hide
@@ -68,6 +67,7 @@ Lean implementation of a jQuery like DOM library with native APIs.
 
 #### attributes
  * attr
+ * removeAttr
  * data
  * val
  * addClass
