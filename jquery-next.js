@@ -320,6 +320,32 @@
 
       return this;
 
+    },
+
+    html: function(html) {
+
+      if(_isUndefined(html)) {
+        return this.elements[0].innerHTML;
+      }
+
+      if(_isString(html)) {
+        this.forEach(function(el) {
+          el.innerHTML = html;
+        });
+        return this;
+      }
+
+      // should be any element or node list
+      // first clear all elements
+      this.empty();
+      this.forEach(function(el) {
+        // @todo check for node lists and arrays
+        // @todo clone html element when index > 1
+        el.appendChild(html);
+      });
+
+      return this;
+
     }
 
   };
