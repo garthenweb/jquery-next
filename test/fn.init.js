@@ -8,11 +8,7 @@
       document.body.innerHTML = '';
     });
 
-    it('should be defined', function() {
-      expect($next).toBeDefined();
-    });
-
-    describe('selector engine', function() {
+    describe('init', function() {
 
       describe('when called without params', function() {
 

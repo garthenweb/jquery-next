@@ -22,8 +22,7 @@ Lean implementation of a jQuery like DOM library with native APIs.
  * prevAll
  * parents
 
-#### manipulation
- * html
+### manipulation
  * text
  * clone
  * before
@@ -66,6 +65,7 @@ Lean implementation of a jQuery like DOM library with native APIs.
  * parent
 
 #### manipulation
+ * html
  * remove
  * empty
 
