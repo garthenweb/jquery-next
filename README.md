@@ -16,11 +16,12 @@ Lean implementation of a jQuery like DOM library with native APIs.
 ### DOM
 
 #### traversal
- * next
- * nextAll
- * prev
- * prevAll
- * parents
+ * next (add support for params)
+ * nextAll (add support for params)
+ * prev (add support for params)
+ * prevAll (add support for params)
+ * parents (add support for params)
+ * siblings (add support for params)
 
 ### manipulation
  * text
@@ -63,6 +64,12 @@ Lean implementation of a jQuery like DOM library with native APIs.
 #### traversal
  * find
  * parent
+ * next
+ * nextAll
+ * prev
+ * prevAll
+ * parents
+ * siblings
 
 #### manipulation
  * html
