@@ -1,0 +1,29 @@
+{
+  "name": "jquery-next",
+  "version": "0.0.0",
+  "description": "Lean implementation of a jQuery like DOM library with native APIs.",
+  "main": "jquery-next.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "karma start karma.conf.js --single-run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/garthenweb/jquery-next.git"
+  },
+  "author": [
+    "Jannick Garthen <jannick.garthen@gmail.com>",
+    "Bjoern Brauer <bjoernjohannes@gmail.com>"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/garthenweb/jquery-next/issues"
+  },
+  "devDependencies": {
+    "karma": "~0.12.23",
+    "karma-jasmine": "~0.1.5",
+    "karma-phantomjs-launcher": "~0.1.4"
+  }
+}
