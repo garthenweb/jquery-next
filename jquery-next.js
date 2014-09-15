@@ -6,52 +6,52 @@
 
   function _toArray(list) {
     return Array.prototype.slice.call(list, 0);
-  };
+  }
 
   function _toHTML(htmlString) {
     var div = document.createElement('div');
     div.innerHTML = htmlString;
     return div.childNodes;
-  };
+  }
 
   function _isBoolean(value) {
     return value === true || value === false;
-  };
+  }
 
   function _isNode(node) {
     return node instanceof window.Node;
-  };
+  }
 
   function _isNodeList(list) {
     return list instanceof window.NodeList;
-  };
+  }
 
   function _isString(str) {
     return typeof str === 'string';
-  };
+  }
 
   function _isElementNode(node) {
     return node.nodeType === 1;
-  };
+  }
 
   function _isDocumentNode(node) {
     return node.nodeType === 9;
-  };
+  }
 
   function _isGlobal(obj) {
     var str = Object.prototype.toString.call(obj)
     return str === '[object global]'
         || str === '[object DOMWindow]'
         || str === '[object Window]';
-  };
+  }
 
   function _isArray(arr) {
     return Object.prototype.toString.call(arr)  === '[object Array]';
-  };
+  }
 
   function _isUndefined(obj) {
     return typeof obj === 'undefined';
-  };
+  }
 
   var $ = function jQueryNext(selector, context) {
     return new $.fn.init(selector, context);
