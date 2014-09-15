@@ -240,23 +240,23 @@
 
     },
 
-    attr: function attr(attr, value) {
+    attr: function attr(attribute, value) {
 
       if(value === false) {
         // remove attribute if value is false
-        return this.removeAttr(attr);
+        return this.removeAttr(attribute);
       } else if(value === true) {
         // set value to attribute name if value is true
-        value = attr;
+        value = attribute;
       }
 
       if(!value) {
         // return attribute value of first element
-        return this.elements[0].getAttribute(attr);
+        return this.elements[0].getAttribute(attribute);
       }
 
       this.forEach(function(el) {
-        el.setAttribute(attr, value);
+        el.setAttribute(attribute, value);
       });
 
       return this;
@@ -268,13 +268,13 @@
      * @param  {String} attrs space seperated list of attribute names
      * @return {$}            return self
      */
-    removeAttr: function removeAttr(attrs) {
+    removeAttr: function removeAttr(attributes) {
 
       // allow to insert space seperated attribute names
-      attrs = attrs.split(' ');
+      attributes = attributes.split(' ');
 
       this.forEach(function(el) {
-        attrs.forEach(function(attr) {
+        attributes.forEach(function(attr) {
           el.removeAttribute(attr);
         });
       });
@@ -376,15 +376,15 @@
 
     },
 
-    html: function html(html) {
+    html: function html(htmlString) {
 
-      if(_isUndefined(html)) {
+      if(_isUndefined(htmlString)) {
         return this.elements[0].innerHTML;
       }
 
-      if(_isString(html)) {
+      if(_isString(htmlString)) {
         this.forEach(function(el) {
-          el.innerHTML = html;
+          el.innerHTML = htmlString;
         });
         return this;
       }
@@ -395,7 +395,7 @@
       this.forEach(function(el) {
         // @todo check for node lists and arrays
         // @todo clone html element when index > 1
-        el.appendChild(html);
+        el.appendChild(htmlString);
       });
 
       return this;
