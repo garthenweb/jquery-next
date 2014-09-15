@@ -4,52 +4,52 @@
 
   var document = window.document;
 
-  var _toArray = function(list) {
+  function _toArray(list) {
     return Array.prototype.slice.call(list, 0);
   };
 
-  var _toHTML = function(htmlString) {
+  function _toHTML(htmlString) {
     var div = document.createElement('div');
     div.innerHTML = htmlString;
     return div.childNodes;
   };
 
-  var _isBoolean = function(value) {
+  function _isBoolean(value) {
     return value === true || value === false;
   };
 
-  var _isNode = function(node) {
+  function _isNode(node) {
     return node instanceof window.Node;
   };
 
-  var _isNodeList = function(list) {
+  function _isNodeList(list) {
     return list instanceof window.NodeList;
   };
 
-  var _isString = function(str) {
+  function _isString(str) {
     return typeof str === 'string';
   };
 
-  var _isElementNode = function(node) {
+  function _isElementNode(node) {
     return node.nodeType === 1;
   };
 
-  var _isDocumentNode = function(node) {
+  function _isDocumentNode(node) {
     return node.nodeType === 9;
   };
 
-  var _isGlobal = function(obj) {
+  function _isGlobal(obj) {
     var str = Object.prototype.toString.call(obj)
     return str === '[object global]'
         || str === '[object DOMWindow]'
         || str === '[object Window]';
   };
 
-  var _isArray = function(arr) {
+  function _isArray(arr) {
     return Object.prototype.toString.call(arr)  === '[object Array]';
   };
 
-  var _isUndefined = function(obj) {
+  function _isUndefined(obj) {
     return typeof obj === 'undefined';
   };
 
@@ -61,7 +61,7 @@
 
     constructor: $,
 
-    init: function(selector, context) {
+    init: function init(selector, context) {
 
       var elements,
           index;
@@ -160,20 +160,20 @@
 
     },
 
-    get: function(num) {
+    get: function get(num) {
 
       return _isUndefined(num) ? this.elements : this.elements[num];
 
     },
 
-    _getRefGroup: function(param) {
+    _getRefGroup: function _getRefGroup(param) {
       var group = this.elements.map(function(el) {
         return el[param];
       });
       return new this.constructor(group);
     },
 
-    _getRefGroupFollowing: function(param) {
+    _getRefGroupFollowing: function _getRefGroupFollowing(param) {
       var elList = [];
       this.forEach(function(el) {
         var following = el;
@@ -186,7 +186,7 @@
       return this.constructor(elList);
     },
 
-    forEach: function(callback, ctx) {
+    forEach: function forEach(callback, ctx) {
 
       this.elements.forEach(callback, ctx);
 
@@ -194,7 +194,7 @@
 
     },
 
-    each: function(callback) {
+    each: function each(callback) {
 
       return this.forEach(function(value, index) {
         callback.apply(value, [index, value]);
@@ -202,7 +202,7 @@
 
     },
 
-    addClass: function(className) {
+    addClass: function addClass(className) {
 
       this.forEach(function(el) {
         el.classList.add(className);
@@ -212,7 +212,7 @@
 
     },
 
-    removeClass: function(className) {
+    removeClass: function removeClass(className) {
 
       this.forEach(function(el) {
         el.classList.remove(className);
@@ -222,7 +222,7 @@
 
     },
 
-    hasClass: function(className) {
+    hasClass: function hasClass(className) {
 
       return this.elements.some(function(el) {
         return el.classList.contains(className);
@@ -230,7 +230,7 @@
 
     },
 
-    toggleClass: function(className) {
+    toggleClass: function toggleClass(className) {
 
       this.forEach(function(el) {
         el.classList.toggle(className);
@@ -240,7 +240,7 @@
 
     },
 
-    attr: function(attr, value) {
+    attr: function attr(attr, value) {
 
       if(value === false) {
         // remove attribute if value is false
@@ -268,7 +268,7 @@
      * @param  {String} attrs space seperated list of attribute names
      * @return {$}            return self
      */
-    removeAttr: function(attrs) {
+    removeAttr: function removeAttr(attrs) {
 
       // allow to insert space seperated attribute names
       attrs = attrs.split(' ');
@@ -283,11 +283,11 @@
 
     },
 
-    data: function(key, value) {
+    data: function data(key, value) {
 
       if (!value) { return this.elements[0].dataset[key]; }
 
-      this.forEach(function (el) {
+      this.forEach(function(el) {
         el.dataset[key] = value;
       });
 
@@ -295,62 +295,62 @@
 
     },
 
-    val: function(value) {
+    val: function val(value) {
 
       return this.attr('value', value);
 
     },
 
-    find: function(selector) {
+    find: function find(selector) {
 
       return this.constructor(selector, this.elements);
 
     },
 
-    parent: function() {
+    parent: function parent() {
 
       return this._getRefGroup('parentNode');
 
     },
 
-    parents: function() {
+    parents: function parents() {
 
       return this._getRefGroupFollowing('parentNode');
 
     },
 
-    next: function() {
+    next: function next() {
 
       return this._getRefGroup('nextElementSibling');
 
     },
 
-    nextAll: function() {
+    nextAll: function nextAll() {
 
       return this._getRefGroupFollowing('nextElementSibling');
 
     },
 
-    prev: function() {
+    prev: function prev() {
 
       return this._getRefGroup('previousElementSibling');
 
     },
 
-    prevAll: function() {
+    prevAll: function prevAll() {
 
       return this._getRefGroupFollowing('previousElementSibling');
 
     },
 
-    siblings: function() {
+    siblings: function siblings() {
       return this.constructor([
         this.prevAll(),
         this.nextAll()
       ]);
     },
 
-    remove: function() {
+    remove: function remove() {
 
       this.forEach(function(el) {
         var parent = el.parentNode;
@@ -366,7 +366,7 @@
      * removes all child nodes from elements
      * @return {$} self
      */
-    empty: function() {
+    empty: function empty() {
 
       this.forEach(function(el) {
         el.innerHTML = '';
@@ -376,7 +376,7 @@
 
     },
 
-    html: function(html) {
+    html: function html(html) {
 
       if(_isUndefined(html)) {
         return this.elements[0].innerHTML;
