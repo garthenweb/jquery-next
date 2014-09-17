@@ -1,4 +1,4 @@
-# jquery-next
+# jquery-next [![Build Status](https://travis-ci.org/ZauberNerd/jquery-next.svg)](https://travis-ci.org/ZauberNerd/jquery-next)
 
 Lean implementation of a jQuery like DOM library with native APIs.
 
