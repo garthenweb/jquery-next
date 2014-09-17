@@ -53,6 +53,14 @@
     return typeof obj === 'undefined';
   }
 
+  function _isFunction(fn) {
+    return typeof fn === 'function';
+  }
+
+  function _isJQueryNext(obj) {
+    return obj instanceof $;
+  }
+
   var $ = function jQueryNext(selector, context) {
     return new $.fn.init(selector, context);
   };
@@ -400,6 +408,22 @@
 
       return this;
 
+    },
+
+    is: function is(test) {
+      return this.elements.some(function(el, i) {
+        if (_isString(test)) {
+          return el.matches(test);
+        } else if (_isNode(test)) {
+          return test === el;
+        } else if (_isNodeList(test)) {
+          return test.indexOf(el) !== -1;
+        } else if (_isJQueryNext(test)) {
+          return test.elements.indexOf(el) !== -1;
+        } else if (_isFunction(test)) {
+          return test.call(this, i, el);
+        }
+      });
     }
 
   };

@@ -43,7 +43,6 @@ Lean implementation of a jQuery like DOM library with native APIs.
  * hide
 
 #### other
- * is
  * contains
 
 ### XHR
@@ -86,3 +85,5 @@ Lean implementation of a jQuery like DOM library with native APIs.
  * hasClass
  * toggleClass
 
+#### other
+ * is
