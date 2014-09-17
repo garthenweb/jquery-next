@@ -309,6 +309,24 @@
 
     },
 
+    width: function width(value) {
+      if (!_isUndefined(value)) {
+        return this.forEach(function(el) {
+          el.style.width = _isString(value) ? value : value + 'px';
+        }, this);
+      }
+      return this.elements[0].clientWidth;
+    },
+
+    height: function height(value) {
+      if (!_isUndefined(value)) {
+        return this.forEach(function(el) {
+          el.style.height = _isString(value) ? value : value + 'px';
+        }, this);
+      }
+      return this.elements[0].clientHeight;
+    },
+
     find: function find(selector) {
 
       return this.constructor(selector, this.elements);
