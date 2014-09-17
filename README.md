@@ -85,3 +85,4 @@ Lean implementation of a jQuery like DOM library with native APIs.
  * removeClass
  * hasClass
  * toggleClass
+
