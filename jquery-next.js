@@ -327,6 +327,26 @@
       return this.elements[0].clientHeight;
     },
 
+    outerWidth: function outerWidth(includeMargin) {
+      var margin = 0;
+      if (!_isUndefined(includeMargin)) {
+        var marginLeft = getComputedStyle(this.elements[0])['margin-left'];
+        var marginRight = getComputedStyle(this.elements[0])['margin-right'];
+        margin = parseInt(marginLeft, 10) + parseInt(marginRight, 10);
+      }
+      return this.elements[0].offsetWidth + margin;
+    },
+
+    outerHeight: function outerHeight(includeMargin) {
+      var margin = 0;
+      if (!_isUndefined(includeMargin)) {
+        var marginTop = getComputedStyle(this.elements[0])['margin-top'];
+        var marginBottom = getComputedStyle(this.elements[0])['margin-bottom'];
+        margin = parseInt(marginTop, 10) + parseInt(marginBottom, 10);
+      }
+      return this.elements[0].offsetHeight + margin;
+    },
+
     find: function find(selector) {
 
       return this.constructor(selector, this.elements);
