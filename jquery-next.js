@@ -15,7 +15,7 @@
   }
 
   function _isBoolean(value) {
-    return value === true || value === false;
+    return typeof value === 'boolean';
   }
 
   function _isNode(node) {
