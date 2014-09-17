@@ -46,7 +46,7 @@
   }
 
   function _isArray(arr) {
-    return Object.prototype.toString.call(arr)  === '[object Array]';
+    return Array.isArray(arr);
   }
 
   function _isUndefined(obj) {
