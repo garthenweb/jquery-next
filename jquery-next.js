@@ -61,6 +61,18 @@
     return obj instanceof $;
   }
 
+  function camelcasify(str) {
+    return str.replace(/-([a-z])/g, function(_, letter) {
+      return letter.toUpperCase();
+    });
+  }
+
+  function dashify(str) {
+    return str.replace(/([A-Z])/g, function(_, letter) {
+      return '-' + letter.toLowerCase();
+    });
+  }
+
   var $ = function jQueryNext(selector, context) {
     return new $.fn.init(selector, context);
   };
@@ -424,6 +436,28 @@
           return test.call(this, i, el);
         }
       });
+    },
+
+    css: function css(property, value) {
+      var propertyName;
+      if (_isString(property)) {
+        propertyName = camelcasify(property);
+        if (_isUndefined(value)) {
+          var styles = window.getComputedStyle(this.elements[0]);
+          return styles[propertyName];
+        } else {
+          return this.forEach(function(el) {
+            el.style[propertyName] = value;
+          });
+        }
+      } else if (typeof property === 'object') {
+        Object.keys(property).forEach(function(prop, i, properties) {
+          this.forEach(function(el) {
+            el.style[camelcasify(prop)] = property[prop];
+          });
+        }, this);
+        return this;
+      }
     }
 
   };
