@@ -2,53 +2,14 @@
 
 Lean implementation of a jQuery like DOM library with native APIs.
 
-## Todo's
+At the moment this is a fun sideproject and not intended to be used in
+production. At a later point this may or may not change.
 
-### Utility
- * extend
 
-### Events
- * on
- * off
- * one
- * trigger
+For a list of missing features see the issues with label 'enhancement'.
 
-### DOM
 
-#### traversal
- * next (add support for params)
- * nextAll (add support for params)
- * prev (add support for params)
- * prevAll (add support for params)
- * parents (add support for params)
- * siblings (add support for params)
-
-### manipulation
- * text
- * clone
- * before
- * after
- * append
- * prepend
- * appendTo
- * prependTo
-
-#### attributes
- * css
- * show
- * hide
-
-#### other
- * contains
-
-### XHR
- * ajaxSetup
- * get
- * post
- * getJSON
- * ajax
-
-## Available
+## Available methods
 
 ### Utility
  * each
@@ -76,6 +37,7 @@ Lean implementation of a jQuery like DOM library with native APIs.
  * removeAttr
  * data
  * val
+ * css
  * addClass
  * removeClass
  * hasClass
@@ -87,3 +49,11 @@ Lean implementation of a jQuery like DOM library with native APIs.
 
 #### other
  * is
+
+
+## Contributing
+
+Contributions are very welcome.
+
+We are using Karma with Phantomjs and Jasmine as testing runner/frameworks,
+so please write tests if you submit a pull-request.
