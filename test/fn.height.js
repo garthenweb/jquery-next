@@ -12,7 +12,7 @@
         $el = $next(document.createElement('div'));
         $el[0].style.height = '36px';
         $el[0].style.paddingTop = '2px';
-        $el[0].style.borderTopWidth = '2px';
+        $el[0].style.border = '1px solid black';
         $el[0].style.marginTop = '2px';
         document.body.appendChild($el[0]);
       });
