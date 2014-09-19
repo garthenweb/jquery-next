@@ -34,10 +34,6 @@ Lean implementation of a jQuery like DOM library with native APIs.
  * prependTo
 
 #### attributes
- * width
- * outerWidth
- * height
- * outerHeight
  * css
  * show
  * hide
@@ -84,6 +80,10 @@ Lean implementation of a jQuery like DOM library with native APIs.
  * removeClass
  * hasClass
  * toggleClass
+ * width
+ * outerWidth
+ * height
+ * outerHeight
 
 #### other
  * is

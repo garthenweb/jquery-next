@@ -321,6 +321,52 @@
 
     },
 
+    // TODO: extract common functionality for width/height,
+    // outerWidth/outerHeight at a later stage when we start modularizing
+    // the core functionality.
+    // https://github.com/garthenweb/jquery-next/pull/7#issuecomment-56168735
+    // TODO: jQuery checks whether the element has box-sizing: border-box
+    // and subtracts padding and border if neccessary.
+    width: function width(value) {
+      if (!_isUndefined(value)) {
+        return this.forEach(function(el) {
+          el.style.width = _isString(value) ? value : value + 'px';
+        }, this);
+      }
+      return this.elements[0].clientWidth;
+    },
+
+    height: function height(value) {
+      if (!_isUndefined(value)) {
+        return this.forEach(function(el) {
+          el.style.height = _isString(value) ? value : value + 'px';
+        }, this);
+      }
+      return this.elements[0].clientHeight;
+    },
+
+    outerWidth: function outerWidth(includeMargin) {
+      var margin = 0;
+      if (!_isUndefined(includeMargin)) {
+        var styles = window.getComputedStyle(this.elements[0]);
+        var marginLeft = styles['margin-left'];
+        var marginRight = styles['margin-right'];
+        margin = parseInt(marginLeft, 10) + parseInt(marginRight, 10);
+      }
+      return this.elements[0].offsetWidth + margin;
+    },
+
+    outerHeight: function outerHeight(includeMargin) {
+      var margin = 0;
+      if (!_isUndefined(includeMargin)) {
+        var styles = window.getComputedStyle(this.elements[0]);
+        var marginTop = styles['margin-top'];
+        var marginBottom = styles['margin-bottom'];
+        margin = parseInt(marginTop, 10) + parseInt(marginBottom, 10);
+      }
+      return this.elements[0].offsetHeight + margin;
+    },
+
     find: function find(selector) {
 
       return this.constructor(selector, this.elements);
