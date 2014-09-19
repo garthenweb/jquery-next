@@ -57,3 +57,7 @@ Contributions are very welcome.
 
 We are using Karma with Phantomjs and Jasmine as testing runner/frameworks,
 so please write tests if you submit a pull-request.
+
+
+## License
+MIT
