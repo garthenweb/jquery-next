@@ -29,6 +29,7 @@ For a list of missing features see the issues with label 'enhancement'.
 
 #### manipulation
  * html
+ * text
  * remove
  * empty
 
