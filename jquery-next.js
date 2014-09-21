@@ -539,6 +539,12 @@
           target.parentNode.insertBefore(el.cloneNode(true), reference);
         });
       });
+    },
+
+    clone: function clone() {
+      return new this.init(this.elements.map(function(el) {
+        return el.cloneNode(true);
+      }));
     }
 
   };
