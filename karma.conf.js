@@ -25,9 +25,20 @@ module.exports = function(config) {
     ],
 
 
+	preprocessors: {
+		'jquery-next.js': ['coverage']
+	},
+
+
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-    reporters: ['progress'],
+    reporters: ['progress', 'coverage', 'coveralls'],
+
+
+	coverageReporter: {
+		type: 'lcov',
+		dir: 'coverage/'
+	},
 
 
     // web server port
