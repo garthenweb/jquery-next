@@ -31,6 +31,7 @@ For a list of missing features see the issues with label 'enhancement'.
  * html
  * remove
  * empty
+ * clone
 
 #### attributes
  * attr

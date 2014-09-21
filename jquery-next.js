@@ -504,6 +504,12 @@
         }, this);
         return this;
       }
+    },
+
+    clone: function clone() {
+      return new this.init(this.elements.map(function(el) {
+        return el.cloneNode(true);
+      }));
     }
 
   };
