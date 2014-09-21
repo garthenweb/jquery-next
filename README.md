@@ -1,4 +1,5 @@
 # jquery-next [![Build Status](https://travis-ci.org/garthenweb/jquery-next.svg)](https://travis-ci.org/garthenweb/jquery-next)
+[![Coverage Status](https://coveralls.io/repos/garthenweb/jquery-next/badge.png)](https://coveralls.io/r/garthenweb/jquery-next)
 
 Lean implementation of a jQuery like DOM library with native APIs.
 
