@@ -468,6 +468,18 @@
 
     },
 
+    text: function text(textStr) {
+      if (_isUndefined(textStr)) {
+        return this.elements.reduce(function(returnStr, el) {
+          return returnStr + el.textContent;
+        }, '');
+      } else {
+        return this.forEach(function(el) {
+          el.textContent = textStr;
+        });
+      }
+    },
+
     is: function is(test) {
       return this.elements.some(function(el, i) {
         if (_isString(test)) {
