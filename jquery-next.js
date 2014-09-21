@@ -522,25 +522,6 @@
       }
     },
 
-    before: function before(element) {
-      var $element = this.constructor(element);
-      this.forEach(function(target) {
-        $element.forEach(function(el) {
-          target.parentNode.insertBefore(el.cloneNode(true), target);
-        });
-      });
-    },
-
-    after: function after(element) {
-      var $element = this.constructor(element);
-      this.forEach(function(target) {
-        var reference = target.nextElementSibling;
-        $element.forEach(function(el) {
-          target.parentNode.insertBefore(el.cloneNode(true), reference);
-        });
-      });
-    },
-
     clone: function clone() {
       return this.constructor(this.elements.map(function(el) {
         return el.cloneNode(true);
@@ -564,12 +545,6 @@
           target.parentNode.insertBefore(el.cloneNode(true), reference);
         });
       });
-    },
-
-    clone: function clone() {
-      return new this.init(this.elements.map(function(el) {
-        return el.cloneNode(true);
-      }));
     }
 
   };

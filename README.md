@@ -33,12 +33,9 @@ For a list of missing features see the issues with label 'enhancement'.
  * text
  * remove
  * empty
- * before
- * after
  * clone
  * before
  * after
- * clone
 
 #### attributes
  * attr
