@@ -516,6 +516,12 @@
         }, this);
         return this;
       }
+    },
+
+    clone: function clone() {
+      return this.constructor(this.elements.map(function(el) {
+        return el.cloneNode(true);
+      }));
     }
 
   };
