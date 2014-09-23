@@ -16,8 +16,13 @@
         el_div = document.createElement('div');
         $el_div = $next(el_div);
         $el_span = $next(el_span);
-        // HACK: phantomjs still uses an older webkit implementation..
-        HTMLElement.prototype.matches = HTMLElement.prototype.webkitMatchesSelector;
+        // HACK: the browser used for tests might not already have this implemented..
+        Element.prototype.matches =
+          Element.prototype.matchesSelector ||
+          Element.prototype.webkitMatchesSelector ||
+          Element.prototype.mozMatchesSelector ||
+          Element.prototype.msMatchesSelector ||
+          Element.prototype.oMatchesSelector;
       });
 
       afterEach(function() {
