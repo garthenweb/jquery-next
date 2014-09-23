@@ -537,12 +537,31 @@
       });
     },
 
+    append: function append(element) {
+      var $element = this.constructor(element);
+      this.forEach(function(target) {
+        $element.forEach(function(el) {
+          target.appendChild(el.cloneNode(true));
+        });
+      });
+    },
+
     after: function after(element) {
       var $element = this.constructor(element);
       return this.forEach(function(target) {
         var reference = target.nextElementSibling;
         $element.forEach(function(el) {
           target.parentNode.insertBefore(el.cloneNode(true), reference);
+        });
+      });
+    },
+
+    prepend: function prepend(element) {
+      var $element = this.constructor(element);
+      this.forEach(function(target) {
+        var reference = target.firstElementChild;
+        $element.forEach(function(el) {
+          target.insertBefore(el.cloneNode(true), reference);
         });
       });
     }
