@@ -349,8 +349,8 @@
       var margin = 0;
       if (!_isUndefined(includeMargin)) {
         var styles = window.getComputedStyle(this.elements[0]);
-        var marginLeft = styles['margin-left'];
-        var marginRight = styles['margin-right'];
+        var marginLeft = styles.getPropertyValue('margin-left');
+        var marginRight = styles.getPropertyValue('margin-right');
         margin = parseInt(marginLeft, 10) + parseInt(marginRight, 10);
       }
       return this.elements[0].offsetWidth + margin;
@@ -360,8 +360,8 @@
       var margin = 0;
       if (!_isUndefined(includeMargin)) {
         var styles = window.getComputedStyle(this.elements[0]);
-        var marginTop = styles['margin-top'];
-        var marginBottom = styles['margin-bottom'];
+        var marginTop = styles.getPropertyValue('margin-top');
+        var marginBottom = styles.getPropertyValue('margin-bottom');
         margin = parseInt(marginTop, 10) + parseInt(marginBottom, 10);
       }
       return this.elements[0].offsetHeight + margin;
@@ -502,7 +502,7 @@
         propertyName = camelcasify(property);
         if (_isUndefined(value)) {
           var styles = window.getComputedStyle(this.elements[0]);
-          return styles[propertyName];
+          return styles.getPropertyValue(propertyName);
         } else {
           return this.forEach(function(el) {
             el.style[propertyName] = value;
