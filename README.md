@@ -36,6 +36,8 @@ For a list of missing features see the issues with label 'enhancement'.
  * clone
  * before
  * after
+ * append
+ * prepend
 
 #### attributes
  * attr
