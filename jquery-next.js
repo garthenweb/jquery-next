@@ -63,13 +63,7 @@
     });
   }
 
-  var _eventMapping = {};
-
-  var _uidCounter = 0;
-
-  function _uid() {
-    return ++_uidCounter;
-  }
+  var _eventMapping = new WeakMap();
 
   var $ = function jQueryNext(selector, context) {
     return new $.fn.init(selector, context);
@@ -681,12 +675,6 @@
 
       // register each event on each element in the matched set.
       return this.forEach(function(el) {
-        var uid = undefined;
-        if (el.jquerynextuid) {
-          uid = el.jquerynextuid;
-        } else {
-          uid = el.jquerynextuid = _uid();
-        }
         // _events is an array of event names and namespaces, separated by a dot
         _events.forEach(function(event) {
           var _event = event.split('.');
@@ -708,7 +696,7 @@
             };
           }
 
-          if (!_eventMapping[uid]) { _eventMapping[uid] = []; }
+          if (!_eventMapping.has(el)) { _eventMapping.set(el, []); }
 
           // mappings are used for deregistering events.
           // each element has it's own mapping, which is an array of events.
@@ -717,7 +705,7 @@
           // handler is the function, which the user provided to $next.on()
           // boundfn is the function which is actually being used in
           // el.addEventListener
-          _eventMapping[uid].push({
+          _eventMapping.get(el).push({
             type: _event[0],
             namespace: _event[1],
             selector: selector,
@@ -745,15 +733,11 @@
       }
 
       return this.forEach(function(el) {
-        // get the elements uid and find the corresponding event mappings
-        var uid = el.jquerynextuid;
-        var eventMapping = _eventMapping[uid];
-        if (_isUndefined(uid) || _isUndefined(eventMapping)) { return; }
-
+        if (!_eventMapping.has(el)) { return; }
         // since event mappings are an array of events,
         // we need to iterate over them and remove the ones which are
         // being deregistered.
-        _eventMapping[uid] = eventMapping.filter(function(map) {
+        var newMappings = _eventMapping.get(el).filter(function(map) {
           var selectorMatch = false;
           var handlerMatch = false;
 
@@ -782,6 +766,14 @@
           }
           return true;
         }, this);
+
+        // if there are still some event mappigns left, update the value
+        // in the weakmap. otherwise delete it.
+        if (newMappings.length > 0) {
+          _eventMapping.set(el, newMappings);
+        } else {
+          _eventMapping.delete(el);
+        }
       }, this);
     },
 
