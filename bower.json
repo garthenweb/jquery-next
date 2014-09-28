@@ -1,0 +1,24 @@
+{
+  "name": "jquery-next",
+  "main": "jquery-next.js",
+  "version": "0.0.0",
+  "homepage": "https://github.com/garthenweb/jquery-next",
+  "authors": [
+    "garthenweb <jannick.garthen@gmail.com>"
+  ],
+  "description": "Lean implementation of a jQuery like DOM library with native APIs.",
+  "moduleType": [
+    "es6"
+  ],
+  "devDependencies": {
+    "web-reflection-dom4": "git://github.com/WebReflection/dom4.git"
+  },
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
