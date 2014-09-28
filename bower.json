@@ -11,7 +11,8 @@
     "es6"
   ],
   "devDependencies": {
-    "web-reflection-dom4": "git://github.com/WebReflection/dom4.git"
+    "web-reflection-dom4": "git://github.com/WebReflection/dom4.git",
+    "es6-collections": "https://github.com/WebReflection/es6-collections.git"
   },
   "license": "MIT",
   "ignore": [

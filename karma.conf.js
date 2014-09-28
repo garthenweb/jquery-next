@@ -15,6 +15,7 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'bower_components/web-reflection-dom4/build/dom4.max.js',
+      'bower_components/es6-collections/es6-collections.js',
       'jquery-next.js',
       'test/**.js'
     ],
