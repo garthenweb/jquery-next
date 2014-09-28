@@ -656,12 +656,17 @@
     },
 
     on: function on(events, selector, data, handler) {
+      // events can a a space separated list of events (including namespaces)
+      // or an object, whose keys are the event names (including namespaces)
+      // and the properties are handler functions.
       var _events = [];
       if (_isString(events)) {
         _events = events.split(' ');
       } else if (typeof events === 'object') {
         _events = Object.keys(events);
       }
+      // the following lines are used to shuffle the arguments around
+      // because some of them are optional
       if (_isFunction(data)) {
         handler = data;
         data = undefined;
@@ -674,6 +679,7 @@
         selector = undefined;
       }
 
+      // register each event on each element in the matched set.
       return this.forEach(function(el) {
         var uid = undefined;
         if (el.jquerynextuid) {
@@ -681,11 +687,14 @@
         } else {
           uid = el.jquerynextuid = _uid();
         }
+        // _events is an array of event names and namespaces, separated by a dot
         _events.forEach(function(event) {
           var _event = event.split('.');
           var _handler = typeof events === 'object' ? events[event] : handler;
           var boundfn = null;
 
+          // boundfn is the actual function that get's passed
+          // to el.addEventListener.
           if (selector) {
             boundfn = function(e) {
               if (!e.target.matches(selector)) { return; }
@@ -701,6 +710,13 @@
 
           if (!_eventMapping[uid]) { _eventMapping[uid] = []; }
 
+          // mappings are used for deregistering events.
+          // each element has it's own mapping, which is an array of events.
+          // _event[0] contains the event name
+          // _event[1] contains the namespace
+          // handler is the function, which the user provided to $next.on()
+          // boundfn is the function which is actually being used in
+          // el.addEventListener
           _eventMapping[uid].push({
             type: _event[0],
             namespace: _event[1],
@@ -715,26 +731,33 @@
     },
 
     off: function off(events, selector, handler) {
+      // make sure _events is an array of eventnames and namespaces
       var _events = [];
       if (_isString(events)) {
         _events = events.split(' ');
       } else if (typeof events === 'object') {
         _events = Object.keys(events);
       }
+      // shuffle optional arguments
       if (_isFunction(selector)) {
         handler = selector;
         selector = undefined;
       }
 
       return this.forEach(function(el) {
+        // get the elements uid and find the corresponding event mappings
         var uid = el.jquerynextuid;
         var eventMapping = _eventMapping[uid];
         if (_isUndefined(uid) || _isUndefined(eventMapping)) { return; }
 
+        // since event mappings are an array of events,
+        // we need to iterate over them and remove the ones which are
+        // being deregistered.
         _eventMapping[uid] = eventMapping.filter(function(map) {
           var selectorMatch = false;
           var handlerMatch = false;
 
+          // if no selector or '**' as selector is provided, remove all events
           if (!_isUndefined(selector)) {
             if (map.selector === selector) {
               selectorMatch = true;
@@ -744,6 +767,7 @@
           } else {
             selectorMatch = true;
           }
+          // if no handler function is provided, remove all events
           if (!_isUndefined(handler)) {
             if (map.handler === handler) {
               handlerMatch = true;
@@ -764,6 +788,7 @@
     once: function once(events, selector, data, handler) {
       var self = this;
 
+      // optional arguments...
       if (_isFunction(data)) {
         handler = data;
         data = undefined;
@@ -772,6 +797,8 @@
         selector = undefined;
       }
 
+      // use self because the event handler is called in the context of
+      // the element.
       return this.on(events, selector, data, function _handler(e) {
         self.off(events, selector, data, _handler);
         handler.call(this, e);
