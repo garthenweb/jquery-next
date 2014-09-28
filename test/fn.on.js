@@ -109,24 +109,24 @@
         el.addEventListener.calls[0].args[1]({});
       });
 
-      it('should match currentTarget against provided selector', function() {
+      it('should match target against provided selector', function() {
         var callback = jasmine.createSpy('callback');
         var matches = jasmine.createSpy('matches').andReturn(true);
         $el.on('click', '.foo', callback);
         el.addEventListener.calls[0].args[1]({
-          currentTarget: { matches: matches }
+          target: { matches: matches }
         });
         expect(matches).toHaveBeenCalled();
         expect(matches).toHaveBeenCalledWith('.foo');
         expect(callback).toHaveBeenCalled();
       });
 
-      it('should not call callback if currentTarget does not match', function() {
+      it('should not call callback if target does not match', function() {
         var callback = jasmine.createSpy('callback');
         var matches = jasmine.createSpy('matches').andReturn(false);
         $el.on('click', '.foo', callback);
         el.addEventListener.calls[0].args[1]({
-          currentTarget: { matches: matches }
+          target: { matches: matches }
         });
         expect(matches).toHaveBeenCalled();
         expect(matches).toHaveBeenCalledWith('.foo');
