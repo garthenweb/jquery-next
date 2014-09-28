@@ -41,6 +41,17 @@
         expect($el[0].getAttribute('contenteditable')).toBe(null);
       });
 
+      it('should remove attribute when used with false', function() {
+        $el[0].setAttribute('contenteditable', 'contenteditable');
+        $el.attr('contenteditable', false);
+        expect($el[0].getAttribute('contenteditable')).toBe(null);
+      });
+
+      it('should return undefined when used without elements', function() {
+        var $empty = $next(null);
+        expect($empty.attr('data')).toBeUndefined();
+      });
+
     });
   });
 

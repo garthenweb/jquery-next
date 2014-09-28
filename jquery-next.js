@@ -276,7 +276,10 @@
 
       if(!value) {
         // return attribute value of first element
-        return this.elements[0].getAttribute(attribute);
+        if(this.elements[0]) {
+          return this.elements[0].getAttribute(attribute);
+        }
+        return;
       }
 
       this.forEach(function(el) {
@@ -309,7 +312,13 @@
 
     data: function data(key, value) {
 
-      if (!value) { return this.elements[0].dataset[key]; }
+      if (!value) {
+        // return attribute value of first element
+        if(this.elements[0]) {
+          return this.elements[0].dataset[key];
+        }
+        return;
+      }
 
       this.forEach(function(el) {
         el.dataset[key] = value;
@@ -337,7 +346,11 @@
           el.style.width = _isString(value) ? value : value + 'px';
         }, this);
       }
-      return this.elements[0].clientWidth;
+
+      if(this.elements[0]) {
+        return this.elements[0].clientWidth;
+      }
+      return;
     },
 
     height: function height(value) {
@@ -346,28 +359,42 @@
           el.style.height = _isString(value) ? value : value + 'px';
         }, this);
       }
-      return this.elements[0].clientHeight;
+
+      if(this.elements[0]) {
+        return this.elements[0].clientHeight;
+      }
+      return;
     },
 
     outerWidth: function outerWidth(includeMargin) {
       var margin = 0;
+      if(!this.elements[0]) {
+        return;
+      }
+
       if (!_isUndefined(includeMargin)) {
         var styles = window.getComputedStyle(this.elements[0]);
         var marginLeft = styles.getPropertyValue('margin-left');
         var marginRight = styles.getPropertyValue('margin-right');
         margin = parseInt(marginLeft, 10) + parseInt(marginRight, 10);
       }
+
       return this.elements[0].offsetWidth + margin;
     },
 
     outerHeight: function outerHeight(includeMargin) {
       var margin = 0;
+      if(!this.elements[0]) {
+        return;
+      }
+
       if (!_isUndefined(includeMargin)) {
         var styles = window.getComputedStyle(this.elements[0]);
         var marginTop = styles.getPropertyValue('margin-top');
         var marginBottom = styles.getPropertyValue('margin-bottom');
         margin = parseInt(marginTop, 10) + parseInt(marginBottom, 10);
       }
+
       return this.elements[0].offsetHeight + margin;
     },
 
@@ -449,7 +476,10 @@
     html: function html(htmlString) {
 
       if(_isUndefined(htmlString)) {
-        return this.elements[0].innerHTML;
+        if(this.elements[0]) {
+          return this.elements[0].innerHTML;
+        }
+        return;
       }
 
       if(_isString(htmlString)) {

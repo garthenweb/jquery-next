@@ -35,6 +35,11 @@
         expect(height).toBe(42);
       });
 
+      it('should return undefined when used without elements', function() {
+        var $empty = $next(null);
+        expect($empty.outerHeight()).toBeUndefined();
+      });
+
     });
   });
 

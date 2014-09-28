@@ -11,12 +11,19 @@
       });
 
       describe('when called without parameters', function() {
+
         it('should return the html from the first element', function() {
           var el = document.createElement('div');
           var htmlStr = '<div> mY Test</div>    :)';
           el.innerHTML = htmlStr;
           expect($next(el).html()).toBe(htmlStr);
         });
+
+        it('should return undefined when used without elements', function() {
+          var $empty = $next(null);
+          expect($empty.html()).toBeUndefined();
+        });
+
       });
 
       describe('when called with string as parameter', function() {
