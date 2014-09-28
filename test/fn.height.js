@@ -40,6 +40,11 @@
         expect($el[0].style.height).toBe('23px');
       });
 
+      it('should return undefined when used without elements', function() {
+        var $empty = $next(null);
+        expect($empty.height()).toBeUndefined();
+      });
+
     });
   });
 
