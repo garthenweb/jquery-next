@@ -61,8 +61,8 @@ For a list of missing features see the issues with label 'enhancement'.
 
 Contributions are very welcome.
 
-We are using Karma with Phantomjs and Jasmine as testing runner/frameworks,
-so please write tests if you submit a pull-request.
+We are using [Karma](karma-runner.github.io) with Phantomjs and Jasmine as testing runner/frameworks and [NodeJS style guid](https://github.com/felixge/node-style-guide).
+So please write tests and match the guidlines if you submit a pull-request.
 
 
 ## License

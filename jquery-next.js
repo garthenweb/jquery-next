@@ -61,7 +61,7 @@
     return obj instanceof $;
   }
 
-  function camelcasify(str) {
+  function _camelcasify(str) {
     return str.replace(/-([a-z])/g, function(_, letter) {
       return letter.toUpperCase();
     });
@@ -86,16 +86,16 @@
       var elements,
           index;
 
-      if(!selector) {
+      if (!selector) {
 
         this.elements = [];
         this.length = this.elements.length;
 
         return this;
 
-      } else if(_isString(selector)) {
+      } else if (_isString(selector)) {
 
-        if(selector.charAt(0) === '<' && selector.charAt( selector.length - 1 ) === '>' && selector.length >= 3) {
+        if (selector.charAt(0) === '<' && selector.charAt( selector.length - 1 ) === '>' && selector.length >= 3) {
 
           // selector is html string
           // create elements
@@ -106,19 +106,19 @@
           this.selector = selector;
 
           // set document as default context
-          if(!context) {
+          if (!context) {
             context = document;
           }
 
-          if(_isNode(context)) {
+          if (_isNode(context)) {
 
             elements = context.querySelectorAll(selector);
 
-          } else if(_isNodeList(context) || _isArray(context)) {
+          } else if (_isNodeList(context) || _isArray(context)) {
 
             elements = [];
             _toArray(context).forEach(function(node) {
-              if(_isNode(node)) {
+              if (_isNode(node)) {
                 // find all nodes by querySelectorAll
                 // and push each into the elements array
                 _toArray(node.querySelectorAll(selector)).forEach(function(el) {
@@ -129,36 +129,36 @@
 
           } else {
 
-            throw 'Context should be a node or a list of nodes';
+            throw new TypeError('Context should be a node or a list of nodes');
 
           }
 
         }
 
-      } else if(_isNode(selector) || _isGlobal(selector)) {
+      } else if (_isNode(selector) || _isGlobal(selector)) {
 
         // set document as default context
-        if(!context) {
+        if (!context) {
           context = document;
         }
 
         elements = [selector];
 
-      } else if(_isNodeList(selector) || _isArray(selector)) {
+      } else if (_isNodeList(selector) || _isArray(selector)) {
 
         elements = selector;
 
-      } else if(_isJQueryNext(selector)) {
+      } else if (_isJQueryNext(selector)) {
 
         return selector;
 
       } else {
 
-        throw 'Selector should be a string, node or a list of nodes';
+        throw new TypeError('Selector should be a string, node or a list of nodes');
 
       }
 
-      if(context) {
+      if (context) {
         this.context = context;
       }
 
@@ -169,7 +169,7 @@
 
         // filter duplicated elements
         var firstOfType = elements.indexOf(el) === key;
-        if(!firstOfType || !(_isElementNode(el) || _isDocumentNode(el) || _isGlobal(el))) {
+        if (!firstOfType || !(_isElementNode(el) || _isDocumentNode(el) || _isGlobal(el))) {
           return false;
         }
 
@@ -191,16 +191,20 @@
     },
 
     _getRefGroup: function _getRefGroup(param) {
+
       var group = this.elements.map(function(el) {
         return el[param];
       });
-      return new this.constructor(group);
+
+      return this.constructor(group);
     },
 
     _getRefGroupFollowing: function _getRefGroupFollowing(param) {
       var elList = [];
+
       this.forEach(function(el) {
         var following = el;
+
         while(following[param]) {
           following = following[param];
           elList.push(following);
@@ -266,17 +270,17 @@
 
     attr: function attr(attribute, value) {
 
-      if(value === false) {
+      if (value === false) {
         // remove attribute if value is false
         return this.removeAttr(attribute);
-      } else if(value === true) {
+      } else if (value === true) {
         // set value to attribute name if value is true
         value = attribute;
       }
 
-      if(!value) {
+      if (!value) {
         // return attribute value of first element
-        if(this.elements[0]) {
+        if (this.elements[0]) {
           return this.elements[0].getAttribute(attribute);
         }
         return;
@@ -314,7 +318,7 @@
 
       if (!value) {
         // return attribute value of first element
-        if(this.elements[0]) {
+        if (this.elements[0]) {
           return this.elements[0].dataset[key];
         }
         return;
@@ -341,58 +345,68 @@
     // TODO: jQuery checks whether the element has box-sizing: border-box
     // and subtracts padding and border if neccessary.
     width: function width(value) {
-      if (!_isUndefined(value)) {
-        return this.forEach(function(el) {
-          el.style.width = _isString(value) ? value : value + 'px';
-        }, this);
+
+      if (_isUndefined(value)) {
+        if (this.elements[0]) {
+          return this.elements[0].clientWidth;
+        }
+        return;
       }
 
-      if(this.elements[0]) {
-        return this.elements[0].clientWidth;
-      }
-      return;
+      return this.forEach(function(el) {
+        el.style.width = _isString(value) ? value : value + 'px';
+      }, this);
+
     },
 
     height: function height(value) {
-      if (!_isUndefined(value)) {
-        return this.forEach(function(el) {
-          el.style.height = _isString(value) ? value : value + 'px';
-        }, this);
+
+      if (_isUndefined(value)) {
+        if (this.elements[0]) {
+          return this.elements[0].clientHeight;
+        }
+        return;
       }
 
-      if(this.elements[0]) {
-        return this.elements[0].clientHeight;
-      }
-      return;
+      return this.forEach(function(el) {
+        el.style.height = _isString(value) ? value : value + 'px';
+      }, this);
+
     },
 
     outerWidth: function outerWidth(includeMargin) {
+
       var margin = 0;
-      if(!this.elements[0]) {
+      if (!this.elements[0]) {
         return;
       }
 
       if (!_isUndefined(includeMargin)) {
-        var styles = window.getComputedStyle(this.elements[0]);
-        var marginLeft = styles.getPropertyValue('margin-left');
+        var styles      = window.getComputedStyle(this.elements[0]);
+        var marginLeft  = styles.getPropertyValue('margin-left');
         var marginRight = styles.getPropertyValue('margin-right');
-        margin = parseInt(marginLeft, 10) + parseInt(marginRight, 10);
+
+        margin += parseInt(marginLeft, 10)
+        margin += parseInt(marginRight, 10);
       }
 
       return this.elements[0].offsetWidth + margin;
     },
 
     outerHeight: function outerHeight(includeMargin) {
+
       var margin = 0;
-      if(!this.elements[0]) {
+      if (!this.elements[0]) {
         return;
       }
 
       if (!_isUndefined(includeMargin)) {
-        var styles = window.getComputedStyle(this.elements[0]);
-        var marginTop = styles.getPropertyValue('margin-top');
+        var styles       = window.getComputedStyle(this.elements[0]);
+        var marginTop    = styles.getPropertyValue('margin-top');
         var marginBottom = styles.getPropertyValue('margin-bottom');
-        margin = parseInt(marginTop, 10) + parseInt(marginBottom, 10);
+
+        margin += parseInt(marginTop, 10);
+        margin += parseInt(marginBottom, 10);
       }
 
       return this.elements[0].offsetHeight + margin;
@@ -451,7 +465,7 @@
 
       this.forEach(function(el) {
         var parent = el.parentNode;
-        if(parent) {
+        if (parent) {
           parent.removeChild(el);
         }
       });
@@ -475,14 +489,14 @@
 
     html: function html(htmlString) {
 
-      if(_isUndefined(htmlString)) {
-        if(this.elements[0]) {
+      if (_isUndefined(htmlString)) {
+        if (this.elements[0]) {
           return this.elements[0].innerHTML;
         }
         return;
       }
 
-      if(_isString(htmlString)) {
+      if (_isString(htmlString)) {
         this.forEach(function(el) {
           el.innerHTML = htmlString;
         });
@@ -503,96 +517,134 @@
     },
 
     text: function text(textStr) {
+
       if (_isUndefined(textStr)) {
         return this.elements.reduce(function(returnStr, el) {
           return returnStr + el.textContent;
         }, '');
-      } else {
-        return this.forEach(function(el) {
-          el.textContent = textStr;
-        });
       }
+
+      return this.forEach(function(el) {
+        el.textContent = textStr;
+      });
+
     },
 
     is: function is(test) {
       return this.elements.some(function(el, i) {
+
         if (_isString(test)) {
           return el.matches(test);
+
         } else if (_isNode(test)) {
           return test === el;
+
         } else if (_isNodeList(test)) {
           return test.indexOf(el) !== -1;
+
         } else if (_isJQueryNext(test)) {
           return test.elements.indexOf(el) !== -1;
+
         } else if (_isFunction(test)) {
           return test.call(this, i, el);
         }
+
+        throw new TypeError('Type of `test` is not supported');
+
       });
+
     },
 
     css: function css(property, value) {
       var propertyName;
+
       if (_isString(property)) {
-        propertyName = camelcasify(property);
+        propertyName = _camelcasify(property);
+
         if (_isUndefined(value)) {
+          // return style from first element
           var styles = window.getComputedStyle(this.elements[0]);
           return styles.getPropertyValue(propertyName);
-        } else {
-          return this.forEach(function(el) {
-            el.style[propertyName] = value;
-          });
         }
+
+        return this.forEach(function(el) {
+          el.style[propertyName] = value;
+        });
+
       } else if (typeof property === 'object') {
-        Object.keys(property).forEach(function(prop, i, properties) {
+        Object.keys(property).forEach(function(prop) {
           this.forEach(function(el) {
-            el.style[camelcasify(prop)] = property[prop];
+            var name = _camelcasify(prop);
+            el.style[name] = property[prop];
           });
         }, this);
         return this;
       }
+
     },
 
     clone: function clone() {
+
       return this.constructor(this.elements.map(function(el) {
         return el.cloneNode(true);
       }));
+
     },
 
     before: function before(element) {
+
       var $element = this.constructor(element);
+
       return this.forEach(function(target) {
+        var parent = target.parentNode;
+
         $element.forEach(function(el) {
-          target.parentNode.insertBefore(el.cloneNode(true), target);
+          parent.insertBefore(el.cloneNode(true), target);
         });
+
       });
+
     },
 
     append: function append(element) {
+
       var $element = this.constructor(element);
-      this.forEach(function(target) {
+
+      return this.forEach(function(target) {
         $element.forEach(function(el) {
           target.appendChild(el.cloneNode(true));
         });
       });
+
     },
 
     after: function after(element) {
+
       var $element = this.constructor(element);
+
       return this.forEach(function(target) {
         var reference = target.nextElementSibling;
+        var parent    = target.parentNode;
+
         $element.forEach(function(el) {
-          target.parentNode.insertBefore(el.cloneNode(true), reference);
+          parent.insertBefore(el.cloneNode(true), reference);
         });
+
       });
+
     },
 
     prepend: function prepend(element) {
+
       var $element = this.constructor(element);
-      this.forEach(function(target) {
+
+      return this.forEach(function(target) {
         var reference = target.firstElementChild;
+
         $element.forEach(function(el) {
           target.insertBefore(el.cloneNode(true), reference);
         });
+
       });
     }
 
