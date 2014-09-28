@@ -63,6 +63,14 @@
     });
   }
 
+  var _eventMapping = {};
+
+  var _uidCounter = 0;
+
+  function _uid() {
+    return ++_uidCounter;
+  }
+
   var $ = function jQueryNext(selector, context) {
     return new $.fn.init(selector, context);
   };
@@ -645,6 +653,134 @@
         });
 
       });
+    },
+
+    on: function on(events, selector, data, handler) {
+      var _events = [];
+      if (_isString(events)) {
+        _events = events.split(' ');
+      } else if (typeof events === 'object') {
+        _events = Object.keys(events);
+      }
+      if (_isFunction(data)) {
+        handler = data;
+        data = undefined;
+      } else if (_isFunction(selector)) {
+        handler = selector;
+        selector = undefined;
+      }
+      if (typeof selector === 'object') {
+        data = selector;
+        selector = undefined;
+      }
+
+      return this.forEach(function(el) {
+        var uid = undefined;
+        if (el.jquerynextuid) {
+          uid = el.jquerynextuid;
+        } else {
+          uid = el.jquerynextuid = _uid();
+        }
+        _events.forEach(function(event) {
+          var _event = event.split('.');
+          var _handler = typeof events === 'object' ? events[event] : handler;
+          var boundfn = null;
+
+          if (selector) {
+            boundfn = function(e) {
+              if (!e.currentTarget.matches(selector)) { return; }
+              e.data = data;
+              _handler.call(el, e);
+            };
+          } else {
+            boundfn = function(e) {
+              e.data = data;
+              _handler.call(el, e);
+            };
+          }
+
+          if (!_eventMapping[uid]) { _eventMapping[uid] = []; }
+
+          _eventMapping[uid].push({
+            type: _event[0],
+            namespace: _event[1],
+            selector: selector,
+            handler: _handler,
+            boundfn: boundfn
+          });
+
+          el.addEventListener(_event[0], boundfn, false);
+        }, this);
+      }, this);
+    },
+
+    off: function off(events, selector, handler) {
+      var _events = [];
+      if (_isString(events)) {
+        _events = events.split(' ');
+      } else if (typeof events === 'object') {
+        _events = Object.keys(events);
+      }
+      if (_isFunction(selector)) {
+        handler = selector;
+        selector = undefined;
+      }
+
+      return this.forEach(function(el) {
+        var uid = el.jquerynextuid;
+        var eventMapping = _eventMapping[uid];
+        if (_isUndefined(uid) || _isUndefined(eventMapping)) { return; }
+
+        _eventMapping[uid] = eventMapping.filter(function(map) {
+          var selectorMatch = false;
+          var handlerMatch = false;
+
+          if (!_isUndefined(selector)) {
+            if (map.selector === selector) {
+              selectorMatch = true;
+            } else if (selector === '**') {
+              selectorMatch = true;
+            }
+          } else {
+            selectorMatch = true;
+          }
+          if (!_isUndefined(handler)) {
+            if (map.handler === handler) {
+              handlerMatch = true;
+            }
+          } else {
+            handlerMatch = true;
+          }
+
+          if (selectorMatch && handlerMatch) {
+            el.removeEventListener(map.type, map.boundfn, false);
+            return false;
+          }
+          return true;
+        }, this);
+      }, this);
+    },
+
+    once: function once(events, selector, data, handler) {
+      var self = this;
+
+      if (_isFunction(data)) {
+        handler = data;
+        data = undefined;
+      } else if (_isFunction(selector)) {
+        handler = selector;
+        selector = undefined;
+      }
+
+      return this.on(events, selector, data, function _handler(e) {
+        self.off(events, selector, data, _handler);
+        handler.call(this, e);
+      });
+    },
+
+    one: function one(events, selector, data, handler) {
+      console.warn('Please use $next.once() instead of $next.one().');
+      return this.once(events, selector, data, handler);
     }
 
   };
