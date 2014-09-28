@@ -688,7 +688,7 @@
 
           if (selector) {
             boundfn = function(e) {
-              if (!e.currentTarget.matches(selector)) { return; }
+              if (!e.target.matches(selector)) { return; }
               e.data = data;
               _handler.call(el, e);
             };
