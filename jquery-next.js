@@ -14,10 +14,6 @@
     return div.childNodes;
   }
 
-  function _isBoolean(value) {
-    return typeof value === 'boolean';
-  }
-
   function _isNode(node) {
     return node instanceof window.Node;
   }
@@ -39,10 +35,10 @@
   }
 
   function _isGlobal(obj) {
-    var str = Object.prototype.toString.call(obj)
-    return str === '[object global]'
-        || str === '[object DOMWindow]'
-        || str === '[object Window]';
+    var str = Object.prototype.toString.call(obj);
+    return str === '[object global]' ||
+           str === '[object DOMWindow]' ||
+           str === '[object Window]';
   }
 
   function _isArray(arr) {
@@ -64,12 +60,6 @@
   function _camelcasify(str) {
     return str.replace(/-([a-z])/g, function(_, letter) {
       return letter.toUpperCase();
-    });
-  }
-
-  function dashify(str) {
-    return str.replace(/([A-Z])/g, function(_, letter) {
-      return '-' + letter.toLowerCase();
     });
   }
 
@@ -95,7 +85,11 @@
 
       } else if (_isString(selector)) {
 
-        if (selector.charAt(0) === '<' && selector.charAt( selector.length - 1 ) === '>' && selector.length >= 3) {
+        var isHTMLString = selector.charAt(0) === '<' &&
+                           selector.charAt( selector.length - 1 ) === '>' &&
+                           selector.length >= 3;
+
+        if (isHTMLString) {
 
           // selector is html string
           // create elements
@@ -167,9 +161,14 @@
       // also convert elements into an array and save as elements on this
       this.elements = _toArray(elements).filter(function(el, key, elements) {
 
-        // filter duplicated elements
-        var firstOfType = elements.indexOf(el) === key;
-        if (!firstOfType || !(_isElementNode(el) || _isDocumentNode(el) || _isGlobal(el))) {
+        var firstOfType      = elements.indexOf(el) === key;
+        var isAcceptedObject = (
+          _isElementNode(el) ||
+          _isDocumentNode(el) ||
+          _isGlobal(el)
+        );
+        // filter duplicated elements and not accepted objects
+        if (!firstOfType || !isAcceptedObject) {
           return false;
         }
 

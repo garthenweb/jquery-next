@@ -17,6 +17,7 @@
   "strict": true,
   "trailing": true,
   "smarttabs": true,
+  "maxlen": 80,
   "globals": {
     "angular": false,
     "require": false,
@@ -25,7 +26,7 @@
     "it": false,
     "expect": false,
     "$next": false,
-    "beforeEach", false,
-    "afterEach", false
+    "beforeEach": false,
+    "afterEach": false
   }
 }
