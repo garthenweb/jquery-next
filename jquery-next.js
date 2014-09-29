@@ -1,4 +1,4 @@
-(function(window, undefined) {
+(function(window) {
 
   'use strict';
 
@@ -295,16 +295,16 @@
 
     /**
      * removes attributes from element
-     * @param  {String} attrs space seperated list of attribute names
-     * @return {$}            return self
+     * @param  {String} attributes space seperated list of attribute names
+     * @return {Object}            return self
      */
     removeAttr: function removeAttr(attributes) {
 
       // allow to insert space seperated attribute names
-      attributes = attributes.split(' ');
+      var _attributes = attributes.split(' ');
 
       this.forEach(function(el) {
-        attributes.forEach(function(attr) {
+        _attributes.forEach(function(attr) {
           el.removeAttribute(attr);
         });
       });
@@ -474,7 +474,7 @@
 
     /**
      * removes all child nodes from elements
-     * @return {$} self
+     * @return {Object} self
      */
     empty: function empty() {
 
@@ -656,4 +656,4 @@
   // insert into window object
   window.$next = $;
 
-})(window);
+})(this);
