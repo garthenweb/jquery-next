@@ -732,49 +732,55 @@
         selector = undefined;
       }
 
-      return this.forEach(function(el) {
-        if (!_eventMapping.has(el)) { return; }
-        // since event mappings are an array of events,
-        // we need to iterate over them and remove the ones which are
-        // being deregistered.
-        var newMappings = _eventMapping.get(el).filter(function(map) {
-          var selectorMatch = false;
-          var handlerMatch = false;
+      this.elements
+        .filter(function hasListeners(el) {
+          return _eventMapping.has(el);
+        })
+        .forEach(function removeListener(el) {
+          // get all event mappings from weakmap
+          var mappings = _eventMapping.get(el);
 
           // if no selector or '**' as selector is provided, remove all events
-          if (!_isUndefined(selector)) {
-            if (map.selector === selector) {
-              selectorMatch = true;
-            } else if (selector === '**') {
-              selectorMatch = true;
-            }
-          } else {
-            selectorMatch = true;
+          function testSelector(eventMap) {
+            var isEqual = selector === eventMap.selector;
+            var isWildCard = selector === '**';
+            var isUndefined = _isUndefined(selector);
+
+            return isEqual || isWildCard || isUndefined;
           }
+
           // if no handler function is provided, remove all events
-          if (!_isUndefined(handler)) {
-            if (map.handler === handler) {
-              handlerMatch = true;
-            }
+          function testHandler(eventMap) {
+            var isEqual = handler === eventMap.handler;
+            var isUndefined = _isUndefined(handler);
+
+            return isEqual || isUndefined;
+          }
+
+          // remove all event handlers which handlers/selectors matches
+          // the given arguments / are wildcard / are not provided as arguments
+          mappings
+            .filter(testSelector)
+            .filter(testHandler)
+            .forEach(function removeEventListener(eventMap) {
+              el.removeEventListener(eventMap.type, eventMap.boundfn, false);
+            });
+
+          // get the remaining event handlers which did not match
+          // to keep them in the weakmap
+          var newMappings = mappings.filter(function keepListener(eventMap) {
+            return !(testSelector(eventMap) && testHandler(eventMap));
+          });
+
+          if (newMappings.length > 0) {
+            _eventMapping.set(el, newMappings);
           } else {
-            handlerMatch = true;
+            _eventMapping.delete(el);
           }
 
-          if (selectorMatch && handlerMatch) {
-            el.removeEventListener(map.type, map.boundfn, false);
-            return false;
-          }
-          return true;
-        }, this);
+        });
 
-        // if there are still some event mappigns left, update the value
-        // in the weakmap. otherwise delete it.
-        if (newMappings.length > 0) {
-          _eventMapping.set(el, newMappings);
-        } else {
-          _eventMapping.delete(el);
-        }
-      }, this);
+        return this;
     },
 
     once: function once(events, selector, data, handler) {
