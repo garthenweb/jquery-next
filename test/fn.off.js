@@ -121,6 +121,28 @@
           .toBe(el.removeEventListener.calls[0].args[1]);
       });
 
+      it('should not remove other listeners when removing listeners via namespace', function() {
+        function callback(e) {}
+        function callback2(e) {}
+        $el.on('click', callback);
+        $el.on('click.foo', callback2);
+        $el.off('click.foo');
+        expect(el.removeEventListener.calls.length).toBe(1);
+        expect(el.addEventListener.calls[1].args[1])
+          .toBe(el.removeEventListener.calls[0].args[1]);
+      });
+
+      it('should not remove other listeners when removing listeners via type', function() {
+        function callback(e) {}
+        function callback2(e) {}
+        $el.on('click', callback);
+        $el.on('keypress', callback2);
+        $el.off('click');
+        expect(el.removeEventListener.calls.length).toBe(1);
+        expect(el.addEventListener.calls[0].args[1])
+          .toBe(el.removeEventListener.calls[0].args[1]);
+      });
+
     });
   });
 

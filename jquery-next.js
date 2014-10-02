@@ -63,7 +63,7 @@
     });
   }
 
-  var _eventMapping = new WeakMap();
+  var _eventMappings = new WeakMap();
 
   var $ = function jQueryNext(selector, context) {
     return new $.fn.init(selector, context);
@@ -696,7 +696,7 @@
             };
           }
 
-          if (!_eventMapping.has(el)) { _eventMapping.set(el, []); }
+          if (!_eventMappings.has(el)) { _eventMappings.set(el, []); }
 
           // mappings are used for deregistering events.
           // each element has it's own mapping, which is an array of events.
@@ -705,7 +705,7 @@
           // handler is the function, which the user provided to $next.on()
           // boundfn is the function which is actually being used in
           // el.addEventListener
-          _eventMapping.get(el).push({
+          _eventMappings.get(el).push({
             type: _event[0],
             namespace: _event[1],
             selector: selector,
@@ -726,61 +726,61 @@
       } else if (typeof events === 'object') {
         _events = Object.keys(events);
       }
+
       // shuffle optional arguments
       if (_isFunction(selector)) {
         handler = selector;
         selector = undefined;
       }
 
-      this.elements
-        .filter(function hasListeners(el) {
-          return _eventMapping.has(el);
-        })
-        .forEach(function removeListener(el) {
-          // get all event mappings from weakmap
-          var mappings = _eventMapping.get(el);
+      function testSelector(map) {
+        var isEqual     = selector === map.selector;
+        var isWildCard  = selector === '**';
+        var isUndefined = _isUndefined(selector);
 
-          // if no selector or '**' as selector is provided, remove all events
-          function testSelector(eventMap) {
-            var isEqual = selector === eventMap.selector;
-            var isWildCard = selector === '**';
-            var isUndefined = _isUndefined(selector);
+        return isEqual || isWildCard || isUndefined;
+      }
 
-            return isEqual || isWildCard || isUndefined;
-          }
+      function testHandler(map) {
+        var isEqual     = handler === map.handler;
+        var isUndefined = _isUndefined(handler);
 
-          // if no handler function is provided, remove all events
-          function testHandler(eventMap) {
-            var isEqual = handler === eventMap.handler;
-            var isUndefined = _isUndefined(handler);
+        return isEqual || isUndefined;
+      }
 
-            return isEqual || isUndefined;
-          }
+      function testIdentifier(map) {
+        var namespaceIdentifier = map.namespace ? '.' + map.namespace : '';
+        var fullIdentifier      = map.type + namespaceIdentifier;
+        var namespaceMatch      = _events.indexOf(namespaceIdentifier) !== -1;
+        var fullMatch           = _events.indexOf(fullIdentifier) !== -1;
 
-          // remove all event handlers which handlers/selectors matches
+        return namespaceMatch || fullMatch || _events.length === 0;
+      }
+
+      this.elements.filter(function hasListeners(el) {
+        // we only care about elements which have events associated with them
+        return _eventMappings.has(el);
+      }).forEach(function removeListener(el) {
+        // get all event mappings from weakmap
+        var mappings = _eventMappings.get(el);
+
+        // use a for-loop to be able to modify mappings array inside the loop
+        for (var i = 0; i < mappings.length; i++) {
+          var map = mappings[i];
+          // remove all event handlers which handlers/selectors/names matches
           // the given arguments / are wildcard / are not provided as arguments
-          mappings
-            .filter(testSelector)
-            .filter(testHandler)
-            .forEach(function removeEventListener(eventMap) {
-              el.removeEventListener(eventMap.type, eventMap.boundfn, false);
-            });
-
-          // get the remaining event handlers which did not match
-          // to keep them in the weakmap
-          var newMappings = mappings.filter(function keepListener(eventMap) {
-            return !(testSelector(eventMap) && testHandler(eventMap));
-          });
-
-          if (newMappings.length > 0) {
-            _eventMapping.set(el, newMappings);
-          } else {
-            _eventMapping.delete(el);
+          if (testSelector(map) && testHandler(map) && testIdentifier(map)) {
+            // remove listener from DOM
+            el.removeEventListener(map.type, map.boundfn, false);
+            // remove listener from event map
+            mappings.splice(i--, 1);
           }
+        }
 
-        });
+        if (mappings.length === 0) { _eventMappings.delete(el); }
+      });
 
-        return this;
+      return this;
     },
 
     once: function once(events, selector, data, handler) {
