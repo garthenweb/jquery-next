@@ -675,6 +675,8 @@
 
       // register each event on each element in the matched set.
       return this.forEach(function(el) {
+        var mappings = _eventMappings.has(el) ? _eventMappings.get(el) : [];
+
         // _events is an array of event names and namespaces, separated by a dot
         _events.forEach(function(event) {
           var _event = event.split('.');
@@ -684,36 +686,30 @@
           // boundfn is the actual function that get's passed
           // to el.addEventListener.
           if (selector) {
-            boundfn = function(e) {
-              if (!e.target.matches(selector)) { return; }
-              e.data = data;
-              _handler.call(el, e);
+            boundfn = function(ev) {
+              if (!ev.target.matches(selector)) { return; }
+              ev.data = data;
+              _handler.call(el, ev);
             };
           } else {
-            boundfn = function(e) {
-              e.data = data;
-              _handler.call(el, e);
+            boundfn = function(ev) {
+              ev.data = data;
+              _handler.call(el, ev);
             };
           }
 
-          if (!_eventMappings.has(el)) { _eventMappings.set(el, []); }
-
           // mappings are used for deregistering events.
           // each element has it's own mapping, which is an array of events.
-          // _event[0] contains the event name
-          // _event[1] contains the namespace
-          // handler is the function, which the user provided to $next.on()
-          // boundfn is the function which is actually being used in
-          // el.addEventListener
-          _eventMappings.get(el).push({
-            type: _event[0],
-            namespace: _event[1],
+          mappings.push({
+            type: _event[0], // event name / type
+            namespace: _event[1], // event namespace
             selector: selector,
-            handler: _handler,
-            boundfn: boundfn
+            handler: _handler, // user provided handler fn to $next.on()
+            boundfn: boundfn // actual bound fn for el.addEventListener
           });
 
           el.addEventListener(_event[0], boundfn, false);
+          _eventMappings.set(el, mappings);
         }, this);
       }, this);
     },
