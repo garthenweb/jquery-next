@@ -53,6 +53,11 @@ For a list of missing features see the issues with label 'enhancement'.
  * height
  * outerHeight
 
+#### events
+ * on
+ * one
+ * off
+
 #### other
  * is
 

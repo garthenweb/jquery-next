@@ -63,6 +63,8 @@
     });
   }
 
+  var _eventMappings = new WeakMap();
+
   var $ = function jQueryNext(selector, context) {
     return new $.fn.init(selector, context);
   };
@@ -645,6 +647,161 @@
         });
 
       });
+    },
+
+    on: function on(events, selector, data, handler) {
+      // events can a a space separated list of events (including namespaces)
+      // or an object, whose keys are the event names (including namespaces)
+      // and the properties are handler functions.
+      var _events = [];
+      if (_isString(events)) {
+        _events = events.split(' ');
+      } else if (typeof events === 'object') {
+        _events = Object.keys(events);
+      }
+      // the following lines are used to shuffle the arguments around
+      // because some of them are optional
+      if (_isFunction(data)) {
+        handler = data;
+        data = undefined;
+      } else if (_isFunction(selector)) {
+        handler = selector;
+        selector = undefined;
+      }
+      if (typeof selector === 'object') {
+        data = selector;
+        selector = undefined;
+      }
+
+      // register each event on each element in the matched set.
+      return this.forEach(function(el) {
+        var mappings = _eventMappings.has(el) ? _eventMappings.get(el) : [];
+
+        // _events is an array of event names and namespaces, separated by a dot
+        _events.forEach(function(event) {
+          var _event = event.split('.');
+          var _handler = typeof events === 'object' ? events[event] : handler;
+          var boundfn = null;
+
+          // boundfn is the actual function that get's passed
+          // to el.addEventListener.
+          if (selector) {
+            boundfn = function(ev) {
+              if (!ev.target.matches(selector)) { return; }
+              ev.data = data;
+              _handler.call(el, ev);
+            };
+          } else {
+            boundfn = function(ev) {
+              ev.data = data;
+              _handler.call(el, ev);
+            };
+          }
+
+          // mappings are used for deregistering events.
+          // each element has it's own mapping, which is an array of events.
+          mappings.push({
+            type: _event[0], // event name / type
+            namespace: _event[1], // event namespace
+            selector: selector,
+            handler: _handler, // user provided handler fn to $next.on()
+            boundfn: boundfn // actual bound fn for el.addEventListener
+          });
+
+          el.addEventListener(_event[0], boundfn, false);
+          _eventMappings.set(el, mappings);
+        }, this);
+      }, this);
+    },
+
+    off: function off(events, selector, handler) {
+      // make sure _events is an array of eventnames and namespaces
+      var _events = [];
+      if (_isString(events)) {
+        _events = events.split(' ');
+      } else if (typeof events === 'object') {
+        _events = Object.keys(events);
+      }
+
+      // shuffle optional arguments
+      if (_isFunction(selector)) {
+        handler = selector;
+        selector = undefined;
+      }
+
+      function testSelector(map) {
+        var isEqual     = selector === map.selector;
+        var isWildCard  = selector === '**';
+        var isUndefined = _isUndefined(selector);
+
+        return isEqual || isWildCard || isUndefined;
+      }
+
+      function testHandler(map) {
+        var isEqual     = handler === map.handler;
+        var isUndefined = _isUndefined(handler);
+
+        return isEqual || isUndefined;
+      }
+
+      function testIdentifier(map) {
+        var namespaceIdentifier = map.namespace ? '.' + map.namespace : '';
+        var fullIdentifier      = map.type + namespaceIdentifier;
+        var namespaceMatch      = _events.indexOf(namespaceIdentifier) !== -1;
+        var fullMatch           = _events.indexOf(fullIdentifier) !== -1;
+
+        return namespaceMatch || fullMatch || _events.length === 0;
+      }
+
+      this.elements.filter(function hasListeners(el) {
+        // we only care about elements which have events associated with them
+        return _eventMappings.has(el);
+      }).forEach(function removeListener(el) {
+        // get all event mappings from weakmap
+        var mappings = _eventMappings.get(el);
+
+        // use a for-loop to be able to modify mappings array inside the loop
+        for (var i = 0; i < mappings.length; i++) {
+          var map = mappings[i];
+          // remove all event handlers which handlers/selectors/names matches
+          // the given arguments / are wildcard / are not provided as arguments
+          if (testSelector(map) && testHandler(map) && testIdentifier(map)) {
+            // remove listener from DOM
+            el.removeEventListener(map.type, map.boundfn, false);
+            // remove listener from event map
+            mappings.splice(i--, 1);
+          }
+        }
+
+        if (mappings.length === 0) { _eventMappings.delete(el); }
+      });
+
+      return this;
+    },
+
+    once: function once(events, selector, data, handler) {
+      var self = this;
+
+      // optional arguments...
+      if (_isFunction(data)) {
+        handler = data;
+        data = undefined;
+      } else if (_isFunction(selector)) {
+        handler = selector;
+        selector = undefined;
+      }
+
+      // use self because the event handler is called in the context of
+      // the element.
+      return this.on(events, selector, data, function _handler(e) {
+        self.off(events, selector, data, _handler);
+        handler.call(this, e);
+      });
+    },
+
+    one: function one(events, selector, data, handler) {
+      console.warn('Please use $next.once() instead of $next.one().');
+      return this.once(events, selector, data, handler);
     }
 
   };
