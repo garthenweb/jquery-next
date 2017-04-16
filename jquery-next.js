@@ -69,6 +69,34 @@
     return new $.fn.init(selector, context);
   };
 
+  function _merge(deep, target, source) {
+    Object.keys(source).forEach(function(prop) {
+      if (deep && source[prop] !== null && typeof source[prop] === 'object') {
+        return (target[prop] = _merge(deep, {}, source[prop]));
+      }
+      target[prop] = source[prop];
+    });
+    return target;
+  }
+
+  $.extend = function extend(target) {
+    var _target = target;
+    var _deep   = false;
+    var index   = 1;
+
+    if (_isBoolean(target)) {
+      _target = arguments[1];
+      _deep   = true;
+      index   = 2;
+    }
+
+    for (length = arguments.length; index < length; index += 1) {
+      _merge(_deep, _target, arguments[index]);
+    }
+
+    return _target;
+  };
+
   $.fn = $.prototype = {
 
     constructor: $,

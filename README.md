@@ -14,6 +14,7 @@ For a list of missing features see the issues with label 'enhancement'.
 ### Utility
  * each
  * forEach
+ * $next.extend
 
 ### DOM
 
